@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comic Exported Successfully - ComicCraft</title>
+    <meta name="description" content="Your comic book PDF has been generated and downloaded successfully.">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="/" class="logo-container">
+            <div class="logo-badge">POW!</div>
+            <div class="logo-text">Comic<span>Craft</span></div>
+        </a>
+        <div class="nav-links">
+            <a href="/" class="nav-link">Create Another Comic</a>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="container">
+        
+        <section class="comic-card success-container">
+            <div class="success-icon-box">✓</div>
+            
+            <h1 class="success-title">Comic Exported Successfully!</h1>
+            <p class="success-message">
+                Your AI-powered comic book has been compiled and saved! Check your downloads folder for your multi-page comic PDF. Dive back in whenever you're ready to bring another story to life.
+            </p>
+
+            <div class="success-actions">
+                {% if pdf_path %}
+                <a href="{{ pdf_path }}" download class="btn-comic btn-comic-blue">
+                    📄 Re-Download PDF File
+                </a>
+                {% endif %}
+                
+                <a href="/" class="btn-comic btn-comic-success">
+                    🎨 Go Create Another Comic
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>ComicCraft AI &bull; Built with FastAPI, Google Gemini 1.5 & Stable Diffusion &bull; SmartBridge AI Project</p>
+    </footer>
+
+</body>
+</html>

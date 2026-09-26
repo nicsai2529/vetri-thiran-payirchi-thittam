@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComicCraft - AI Comic Story Creator</title>
+    <meta name="description" content="Create rich, personalized 5-panel comic stories and stunning illustrations with Google Gemini and Stable Diffusion.">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="/" class="logo-container">
+            <div class="logo-badge">POW!</div>
+            <div class="logo-text">Comic<span>Craft</span></div>
+        </a>
+        <div class="nav-links">
+            <span class="badge-pill">⚡ Powered by Gemini 1.5 & Stable Diffusion</span>
+            <a href="/docs" target="_blank" class="nav-link">API Docs</a>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="container">
+        
+        <header class="hero-header">
+            <h1 class="hero-title">Create Your Comic</h1>
+            <p class="hero-subtitle">Turn your imagination into a multi-panel visual comic strip. Customize characters, world setting, tone, and art style in seconds.</p>
+        </header>
+
+        <!-- Generation Form Card -->
+        <section class="comic-card">
+            <form id="comicForm" action="/generate" method="POST">
+                
+                <div class="form-grid">
+                    
+                    <!-- Story Prompt (Full Width) -->
+                    <div class="form-group form-group-full">
+                        <label for="prompt" class="form-label">
+                            <span>📖 Story Prompt</span>
+                            <span class="form-label-badge">Required</span>
+                        </label>
+                        <textarea id="prompt" name="prompt" class="form-control" rows="3" required placeholder="Describe your comic story idea (e.g., A brave fox exploring an enchanted forest filled with whispering ancient trees...)">A brave fox exploring an enchanted forest.</textarea>
+                        
+                        <!-- Quick Prompt Inspiration Chips -->
+                        <div class="quick-prompts">
+                            <span class="quick-prompts-label">Quick Ideas:</span>
+                            <span class="prompt-chip" onclick="setPrompt('A brave fox exploring an enchanted forest to find the lost celestial stone.')">🦊 Forest Fox Adventure</span>
+                            <span class="prompt-chip" onclick="setPrompt('A cybernetic ninja infiltrating a mega-corp skyscraper in Neo-Tokyo.')">⚡ Cyber Ninja Heist</span>
+                            <span class="prompt-chip" onclick="setPrompt('A young rookie wizard who accidentally summons a friendly miniature dragon.')">🐉 Rookie Wizard</span>
+                            <span class="prompt-chip" onclick="setPrompt('An astronaut discovering ancient glowing ruins buried deep in Martian ice.')">🚀 Mars Explorer</span>
+                        </div>
+                    </div>
+
+                    <!-- Character Name -->
+                    <div class="form-group">
+                        <label for="character_name" class="form-label">👤 Main Character Name</label>
+                        <input type="text" id="character_name" name="character_name" class="form-control" placeholder="e.g. Free, Kaito, Elena" value="Free">
+                    </div>
+
+                    <!-- Setting -->
+                    <div class="form-group">
+                        <label for="setting" class="form-label">🌲 Setting / Location</label>
+                        <select id="setting" name="setting" class="form-control">
+                            <option value="Enchanted Forest" selected>Enchanted Forest</option>
+                            <option value="Cyberpunk Metropolis">Cyberpunk Metropolis</option>
+                            <option value="Academy School Grounds">Academy School Grounds</option>
+                            <option value="Deep Space Orbit">Deep Space Orbit</option>
+                            <option value="Haunted Victorian Mansion">Haunted Victorian Mansion</option>
+                            <option value="Ancient Desert Ruins">Ancient Desert Ruins</option>
+                            <option value="Underwater Coral Kingdom">Underwater Coral Kingdom</option>
+                        </select>
+                    </div>
+
+                    <!-- Story Tone -->
+                    <div class="form-group">
+                        <label for="tone" class="form-label">🎭 Story Tone</label>
+                        <select id="tone" name="tone" class="form-control">
+                            <option value="Dramatic" selected>Dramatic & Cinematic</option>
+                            <option value="Funny">Light-hearted & Funny</option>
+                            <option value="Poetic">Poetic & Mysterious</option>
+                            <option value="Action-Packed">Action-Packed & Intense</option>
+                            <option value="Heartwarming">Heartwarming & Cozy</option>
+                        </select>
+                    </div>
+
+                    <!-- Art Style -->
+                    <div class="form-group">
+                        <label for="style" class="form-label">🎨 Art Style</label>
+                        <select id="style" name="style" class="form-control">
+                            <option value="Classic Comic Book" selected>Classic Comic Book</option>
+                            <option value="Anime / Manga">Anime / Manga Style</option>
+                            <option value="Realistic / Cinematic">Realistic / Cinematic</option>
+                            <option value="Pixel Art">Retro Pixel Art</option>
+                            <option value="Dark Noir Graphic Novel">Dark Noir Graphic Novel</option>
+                            <option value="Vibrant Watercolor">Vibrant Watercolor Comic</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="generateBtn" class="btn-comic">
+                    <span>✨ Generate Comic Strip</span>
+                </button>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- Loading Modal / Progress Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loader-box">
+            <div class="comic-spinner"></div>
+            <h2 class="loader-title">CRAFTING YOUR COMIC!</h2>
+            <p style="color: #cbd5e1; font-size: 0.95rem;">Please hold on while the AI models coordinate storyline and artwork...</p>
+            
+            <div class="loader-step-list">
+                <div class="loader-step-item active" id="step1">
+                    <div class="loader-step-icon">1</div>
+                    <span>Gemini Flash generating 5-panel structured outline...</span>
+                </div>
+                <div class="loader-step-item" id="step2">
+                    <div class="loader-step-icon">2</div>
+                    <span>Gemini Pro crafting narration & character dialogues...</span>
+                </div>
+                <div class="loader-step-item" id="step3">
+                    <div class="loader-step-icon">3</div>
+                    <span>Stable Diffusion painting comic illustrations...</span>
+                </div>
+                <div class="loader-step-item" id="step4">
+                    <div class="loader-step-icon">4</div>
+                    <span>Assembling panels and compiling PDF document...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>ComicCraft AI &bull; Built with FastAPI, Google Gemini 1.5 & Stable Diffusion &bull; SmartBridge AI Project</p>
+    </footer>
+
+    <script>
+        function setPrompt(text) {
+            document.getElementById('prompt').value = text;
+        }
+
+        const form = document.getElementById('comicForm');
+        const overlay = document.getElementById('loadingOverlay');
+        const steps = ['step1', 'step2', 'step3', 'step4'];
+
+        form.addEventListener('submit', function() {
+            overlay.style.display = 'flex';
+            let currentStep = 0;
+
+            const interval = setInterval(() => {
+                if (currentStep < steps.length - 1) {
+                    currentStep++;
+                    document.getElementById(steps[currentStep]).classList.add('active');
+                } else {
+                    clearInterval(interval);
+                }
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
